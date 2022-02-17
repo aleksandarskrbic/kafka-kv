@@ -7,7 +7,7 @@ object Admin extends App {
 
   val admin = KafkaAdmin.make("localhost:9092")
 
-  admin.createCompactedTopic("random").onComplete {
+  admin.deleteTopic("random").onComplete {
     case Failure(exception) => println(exception)
     case Success(value)     => println(value)
   }

@@ -4,6 +4,7 @@ import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig, Config}
 
 import java.util.Properties
 import scala.concurrent.{ExecutionContext, Promise}
+import java.util.{List => JavaList, Collections => Java}
 
 class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
   def createCompactedTopic(name: String) = {
@@ -19,12 +20,26 @@ class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
 
     promise.future
   }
+
+  def deleteTopic(name: String) = {
+    val promise = Promise[Unit]()
+    val topic = Java.singletonList(name)
+    val result = admin.deleteTopics(topic)
+    val kafkaFuture = result.topicNameValues().get(name)
+
+    kafkaFuture.whenComplete { (_, error) =>
+      if (error != null) promise.failure(error)
+      else promise.success(())
+    }
+
+    promise.future
+  }
 }
 
 object KafkaAdmin {
   def make(servers: String)(implicit ec: ExecutionContext): KafkaAdmin = {
     val config = new Properties()
-    config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
+    config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, servers)
 
     val admin: AdminClient = AdminClient.create(config)
 
