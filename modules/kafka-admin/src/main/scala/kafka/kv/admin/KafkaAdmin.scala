@@ -4,7 +4,7 @@ import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig, Config}
 
 import java.util.Properties
 import scala.concurrent.{ExecutionContext, Promise}
-import java.util.{List => JavaList, Collections => Java}
+import java.util.{Collections => Java}
 
 class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
   def createCompactedTopic(name: String) = {
@@ -25,7 +25,7 @@ class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
     val promise = Promise[Unit]()
     val topic = Java.singletonList(name)
     val result = admin.deleteTopics(topic)
-    val kafkaFuture = result.topicNameValues().get(name)
+    val kafkaFuture = result.values().get(name)
 
     kafkaFuture.whenComplete { (_, error) =>
       if (error != null) promise.failure(error)
