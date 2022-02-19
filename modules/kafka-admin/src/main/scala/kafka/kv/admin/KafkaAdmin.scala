@@ -3,21 +3,20 @@ package kafka.kv.admin
 import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig, Config}
 
 import java.util.Properties
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 import java.util.{Collections => Java}
 import KafkaFutureOps._
 
 class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
-  def createCompactedTopic(name: String) = {
+  def createCompactedTopic(name: String): Future[Config] = {
     val topic = Topic(name).toJava
     val result = admin.createTopics(topic)
-
     val kafkaFuture = result.config(name)
 
     kafkaFuture.toFuture
   }
 
-  def deleteTopic(name: String) = {
+  def deleteTopic(name: String): Future[Void] = {
     val topic = Java.singletonList(name)
     val result = admin.deleteTopics(topic)
     val kafkaFuture = result.values().get(name)

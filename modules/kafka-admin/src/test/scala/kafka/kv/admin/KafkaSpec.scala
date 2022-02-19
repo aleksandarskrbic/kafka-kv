@@ -24,10 +24,12 @@ trait KafkaSpec
   var embeddedKafkaServer: EmbeddedK = _
 
   def listTopics(): Future[Set[String]] =
-    withAdminClient { adminClient =>
-      val kafkaFuture = adminClient.listTopics().names()
-      kafkaFuture.toFuture.map(_.asScala.toSet)
-    }.get
+    Future.fromTry {
+      withAdminClient { adminClient =>
+        val kafkaFuture = adminClient.listTopics().names()
+        kafkaFuture.toFuture.map(_.asScala.toSet)
+      }
+    }.flatten
 
   def createTopic(topic: String): Future[Unit] =
     Future.successful(createCustomTopic(topic))
