@@ -4,9 +4,11 @@ import java.util.Properties
 import java.util.{Collections => Java}
 import kafka.kv.admin.internal.Blocker
 import kafka.kv.admin.internal.FutureOps._
+
 import scala.concurrent.{ExecutionContext, Future}
-import kafka.kv.admin.model.{ClusterDetails, CreateTopic, TopicDetails}
+import kafka.kv.admin.model.{ClusterDetails, ConsumerGroupsDetails, CreateTopic, TopicDetails}
 import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig}
+
 import scala.jdk.CollectionConverters._
 
 class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
@@ -41,19 +43,22 @@ class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
       nodes <- result.nodes().toFuture
     } yield ClusterDetails(clusterId, controller, nodes.asScala.toList)
   }
+
+  def describeConsumerGroups(consumerGroups: List[String]): Future[ConsumerGroupsDetails] = {
+    val result = admin.describeConsumerGroups(consumerGroups.asJava)
+    val kafkaFuture = result.all()
+    kafkaFuture.toFuture.map(result => ConsumerGroupsDetails(result.asScala.toMap))
+  }
+
+  def close(): Unit =
+    admin.close()
 }
 
 object KafkaAdmin {
-  def make(
-            servers: String,
-            ec: ExecutionContext = Blocker.default()
-          ): KafkaAdmin = {
-
+  def make(servers: String): KafkaAdmin = {
     val config = new Properties()
     config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, servers)
 
-    val admin: AdminClient = AdminClient.create(config)
-
-    new KafkaAdmin(admin)(ec)
+    new KafkaAdmin(AdminClient.create(config))(Blocker.default())
   }
 }
