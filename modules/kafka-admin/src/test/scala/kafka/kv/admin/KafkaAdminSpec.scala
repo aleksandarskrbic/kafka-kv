@@ -9,17 +9,31 @@ class KafkaAdminSpec extends KafkaSpec {
 
     for {
       _ <- kafkaAdmin.createCompactedTopic(testTopic)
-      topics <- listTopics()
-    } yield topics should contain(testTopic)
+      topics <- kafkaAdmin.listTopics().map(_.map(_.name))
+    } yield  {
+      topics should contain(testTopic)
+    }
   }
 
-  it should "delete kafka topic" in {
+  it should "create and delete kafka topic" in {
     val topicToDelete = "topic.to.delete"
 
     for {
-      _ <- createTopic(topicToDelete)
+      _ <- kafkaAdmin.createCompactedTopic(topicToDelete)
+      topicsBeforeDeletion <- kafkaAdmin.listTopics().map(_.map(_.name))
       _ <- kafkaAdmin.deleteTopic(topicToDelete)
-      topics <- listTopics()
-    } yield topics should not contain topicToDelete
+      topicsAfterDeletion <- kafkaAdmin.listTopics().map(_.map(_.name))
+    } yield {
+      topicsBeforeDeletion should contain(topicToDelete)
+      topicsAfterDeletion should not contain topicToDelete
+    }
+  }
+
+  it should "return cluster details" in {
+    for {
+      clusterDetails <- kafkaAdmin.describeCluster()
+    } yield {
+      clusterDetails.nodes.size should be (1)
+    }
   }
 }

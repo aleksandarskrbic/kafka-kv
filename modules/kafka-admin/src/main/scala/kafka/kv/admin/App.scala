@@ -1,13 +1,18 @@
 package kafka.kv.admin
 
-import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
-object Admin extends App {
+object App extends App {
 
   val admin = KafkaAdmin.make("localhost:9092")
 
-  admin.deleteTopic("random").onComplete {
+  admin.createCompactedTopic("asdddd").onComplete {
+    case Failure(exception) => println(exception)
+    case Success(value)     => println(value)
+  }
+
+  admin.listTopics().onComplete {
     case Failure(exception) => println(exception)
     case Success(value)     => println(value)
   }
