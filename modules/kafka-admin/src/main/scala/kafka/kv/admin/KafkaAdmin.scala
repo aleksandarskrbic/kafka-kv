@@ -1,17 +1,13 @@
 package kafka.kv.admin
 
-import kafka.kv.admin.internal.Blocker
-
 import java.util.Properties
-import scala.concurrent.{ExecutionContext, ExecutionContextExecutor, Future}
 import java.util.{Collections => Java}
+import kafka.kv.admin.internal.Blocker
 import kafka.kv.admin.internal.FutureOps._
+import scala.concurrent.{ExecutionContext, Future}
 import kafka.kv.admin.model.{ClusterDetails, CreateTopic, TopicDetails}
 import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig}
-
-import java.util.concurrent.atomic.AtomicLong
 import scala.jdk.CollectionConverters._
-import java.util.concurrent.{Executors, ThreadFactory}
 
 class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
   def createCompactedTopic(name: String): Future[Unit] = {

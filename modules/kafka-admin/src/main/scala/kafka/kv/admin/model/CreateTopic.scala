@@ -8,7 +8,6 @@ final case class CreateTopic(name: String) {
     val topic = new NewTopic(name, 1, short2Short(1))
     val config = Java.singletonMap("cleanup.policy", "compact")
     topic.configs(config)
-
     topic
   }
 }
