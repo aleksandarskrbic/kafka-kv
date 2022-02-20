@@ -3,6 +3,7 @@ import Dependencies._
 
 ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := "2.13.8"
+ThisBuild / scalafixDependencies += "com.github.liancheng" %% "organize-imports" % "0.6.0"
 
 lazy val `embedded-kafka` = (project in file("modules/embedded-kafka"))
   .settings(
@@ -54,6 +55,7 @@ lazy val `kafka-kv-server` = (project in file("modules/kafka-kv-server"))
       Libraries.kafkaClients ++
         Libraries.logback ++
         Libraries.scalaLogging ++
+        Libraries.circe ++
         Libraries.scalactic ++
         Libraries.scalatest.map(_ % Test) ++
         Libraries.embeddedKafka.map(_ % Test)

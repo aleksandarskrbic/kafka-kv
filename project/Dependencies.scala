@@ -8,6 +8,8 @@ object Dependencies {
     lazy val scalactic = "3.2.11"
     lazy val scalatest = "3.2.11"
     lazy val tapir = "0.20.0-M10"
+    lazy val circe = "0.12.3"
+    lazy val caffeine = "3.0.5"
   }
 
   object Libraries {
@@ -19,5 +21,11 @@ object Dependencies {
     lazy val scalatest = Seq("org.scalatest" %% "scalatest" % Versions.scalatest)
     lazy val tapirAkkaHttp = Seq("com.softwaremill.sttp.tapir" %% "tapir-akka-http-server" % Versions.tapir)
     lazy val tapirCirce = Seq("com.softwaremill.sttp.tapir" %% "tapir-json-circe" % Versions.tapir)
+    lazy val caffeine = Seq("com.github.ben-manes.caffeine" % "caffeine" % Versions.caffeine)
+    lazy val circe = Seq(
+      "io.circe" %% "circe-core",
+      "io.circe" %% "circe-generic",
+      "io.circe" %% "circe-parser"
+    ).map(_ % Versions.circe)
   }
 }
