@@ -6,22 +6,22 @@ import kafka.kv.server.http.request.CreateStore
 import scala.concurrent.{ExecutionContext, Future}
 
 trait StoreManager {
-  def createStore(request: CreateStore): Future[Unit]
+  def createStore(name: String): Future[Unit]
 }
 
 final class DefaultStoreManager(
     kafkaAdmin: KafkaAdmin
 )(implicit ec: ExecutionContext)
     extends StoreManager {
-  override def createStore(request: CreateStore): Future[Unit] =
+  override def createStore(name: String): Future[Unit] =
     for {
       topics <- kafkaAdmin.listTopics()
-      storeExists = topics.map(_.name).contains(request.name)
+      storeExists = topics.map(_.name).contains(name)
       _ <- {
         if (storeExists)
           Future.failed(new RuntimeException("Store already exists"))
         else
-          kafkaAdmin.createCompactedTopic(request.name)
+          kafkaAdmin.createCompactedTopic(name)
       }
     } yield ()
 }

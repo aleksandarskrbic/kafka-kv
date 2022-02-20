@@ -2,6 +2,7 @@ package kafka.kv.server
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.Http
+import kafka.kv.admin.KafkaAdmin
 import kafka.kv.server.http.api.StoreApi
 import org.apache.kafka.clients.producer.{
   KafkaProducer,
@@ -25,7 +26,7 @@ object HttpServer extends App {
   import actorSystem.dispatcher
 
   val route = AkkaHttpServerInterpreter().toRoute(
-    new StoreApi().createStoreEndpoint
+    new StoreApi(StoreManager.make("localhost:9092")).createStoreEndpoint
   )
 
   val bindAndCheck =

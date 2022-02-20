@@ -1,7 +1,7 @@
 package kafka.kv.server.http.response
 
 import io.circe.{Decoder, Encoder}
-import io.circe.generic.semiauto._
+import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 
 final case class FailureInfo(message: String)
 
