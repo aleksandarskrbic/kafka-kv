@@ -22,9 +22,21 @@ lazy val `kafka-admin` = (project in file("modules/kafka-admin"))
         Libraries.embeddedKafka.map(_ % Test)
   )
 
-lazy val `kafka-kv-client` = (project in file("modules/kafka-kv-client"))
+lazy val `kafka-kv-client-http` = (project in file("modules/kafka-kv-client-http"))
   .settings(
-    name := "kafka-kv-client",
+    name := "kafka-kv-client-http",
+    libraryDependencies ++=
+      Libraries.kafkaClients ++
+        Libraries.logback ++
+        Libraries.scalaLogging ++
+        Libraries.scalactic ++
+        Libraries.scalatest.map(_ % Test) ++
+        Libraries.embeddedKafka.map(_ % Test)
+  )
+
+lazy val `kafka-kv-client-scala` = (project in file("modules/kafka-kv-client-sdk"))
+  .settings(
+    name := "kafka-kv-client-sdk",
     libraryDependencies ++=
       Libraries.kafkaClients ++
         Libraries.logback ++
