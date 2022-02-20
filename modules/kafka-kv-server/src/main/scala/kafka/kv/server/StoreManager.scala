@@ -2,19 +2,31 @@ package kafka.kv.server
 
 import kafka.kv.admin.KafkaAdmin
 import kafka.kv.server.model.CreateStoreRequest
-
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 trait StoreManager {
   def createStore(request: CreateStoreRequest): Future[Unit]
 }
 
-final class DefaultStoreManager(kafkaAdmin: KafkaAdmin) extends StoreManager {
-  override def createStore(request: CreateStoreRequest): Future[Unit] = ???
+final class DefaultStoreManager(
+    kafkaAdmin: KafkaAdmin
+)(implicit ec: ExecutionContext)
+    extends StoreManager {
+  override def createStore(request: CreateStoreRequest): Future[Unit] =
+    for {
+      topics <- kafkaAdmin.listTopics()
+      storeExists = topics.map(_.name).contains(request.name)
+      _ <- {
+        if (storeExists)
+          Future.failed(new RuntimeException("Store already exists"))
+        else
+          kafkaAdmin.createCompactedTopic(request.name)
+      }
+    } yield ()
 }
 
 object StoreManager {
-  def make(servers: String): StoreManager = {
+  def make(servers: String)(implicit ec: ExecutionContext): StoreManager = {
     val kafkaAdmin = KafkaAdmin.make(servers)
     new DefaultStoreManager(kafkaAdmin)
   }

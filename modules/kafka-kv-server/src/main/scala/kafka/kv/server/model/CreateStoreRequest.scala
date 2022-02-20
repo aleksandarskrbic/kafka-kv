@@ -23,5 +23,5 @@ object KeyType {
 final case class CreateStoreRequest(name: String, keyType: KeyType)
 
 object CreateStoreRequest {
-  implicit val decoder: Decoder[CreateStoreRequest] = deriveDecoder
+  implicit val decoder: Decoder[CreateStoreRequest] = deriveDecoder[CreateStoreRequest]
 }
