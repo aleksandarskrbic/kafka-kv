@@ -16,7 +16,7 @@ object Blocker {
 
         def newThread(r: Runnable): Thread = {
           val thread = new Thread(r)
-          thread.setName(s"${name}-" + counter.getAndIncrement.toString)
+          thread.setName("kafka-admin-tp-" + counter.getAndIncrement.toString)
           thread.setDaemon(true)
           thread
         }
