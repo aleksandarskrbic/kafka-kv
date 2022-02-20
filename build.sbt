@@ -30,6 +30,9 @@ lazy val kafkaKvClientHttp = (project in file("modules/kafka-kv-client-http"))
       Libraries.kafkaClients ++
         Libraries.logback ++
         Libraries.scalaLogging ++
+        Libraries.akkaActors ++
+        Libraries.tapirCirce ++
+        Libraries.tapirAkkaHttp ++
         Libraries.scalactic ++
         Libraries.scalatest.map(_ % Test) ++
         Libraries.embeddedKafka.map(_ % Test)
@@ -47,7 +50,6 @@ lazy val kafkaKvClientSdk = (project in file("modules/kafka-kv-client-sdk"))
         Libraries.embeddedKafka.map(_ % Test)
   )
 
-
 lazy val kafkaKvServer = (project in file("modules/kafka-kv-server"))
   .settings(
     name := "kafka-kv-server",
@@ -55,13 +57,16 @@ lazy val kafkaKvServer = (project in file("modules/kafka-kv-server"))
       Libraries.kafkaClients ++
         Libraries.logback ++
         Libraries.scalaLogging ++
+        Libraries.akkaActors ++
+        Libraries.tapirCirce ++
+        Libraries.tapirAkkaHttp ++
         Libraries.circe ++
         Libraries.akkaActors ++
         Libraries.scalactic ++
         Libraries.scalatest.map(_ % Test) ++
         Libraries.embeddedKafka.map(_ % Test)
-  ).dependsOn(kafkaAdmin)
-
+  )
+  .dependsOn(kafkaAdmin)
 
 lazy val root = (project in file("."))
   .settings(name := "kafka-kv")

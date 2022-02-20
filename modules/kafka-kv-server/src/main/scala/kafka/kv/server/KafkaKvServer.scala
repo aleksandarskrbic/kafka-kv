@@ -1,5 +1,8 @@
 package kafka.kv.server
 import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.adapter._
+import akka.http.scaladsl.Http
+import kafka.kv.server.http.api.StoreApi
 import org.apache.kafka.clients.producer.{
   KafkaProducer,
   Producer,
@@ -9,8 +12,28 @@ import org.apache.kafka.common.serialization.{Serializer, StringSerializer}
 import org.apache.kafka.common.header
 import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.header.internals.{RecordHeader, RecordHeaders}
+import sttp.tapir.server.akkahttp.AkkaHttpServerInterpreter
 
 import java.util.Properties
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
+
+object HttpServer extends App {
+  implicit val actorSystem = akka.actor.ActorSystem("ClassicToTypedSystem")
+  val typedSystem: ActorSystem[Nothing] = actorSystem.toTyped
+
+  import actorSystem.dispatcher
+
+  val route = AkkaHttpServerInterpreter().toRoute(
+    new StoreApi().createStoreEndpoint
+  )
+
+  val bindAndCheck =
+    Http().newServerAt("localhost", 8080).bindFlow(route)
+
+  Await.result(bindAndCheck, 1.minute)
+  println("Server started!")
+}
 
 object KafkaKvServer extends App {
   val h = new RecordHeaders()
