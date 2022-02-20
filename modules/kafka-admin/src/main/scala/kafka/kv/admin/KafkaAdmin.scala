@@ -31,7 +31,7 @@ class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
     val kafkaFuture = result.listings()
     kafkaFuture.toFuture.map { topicListings =>
       val topics = topicListings.asScala.toSet
-      topics.map(listing => TopicDetails(listing.name(), listing.isInternal))
+      topics.map(TopicDetails.fromTopicListing)
     }
   }
 

@@ -1,51 +1,52 @@
 import sbt.Keys.libraryDependencies
+import Dependencies._
 
 ThisBuild / version := "0.1.0-SNAPSHOT"
-
 ThisBuild / scalaVersion := "2.13.8"
 
 lazy val `embedded-kafka` = (project in file("modules/embedded-kafka"))
   .settings(
     name := "embedded-kafka",
-    libraryDependencies += "io.github.embeddedkafka" %% "embedded-kafka" % "2.8.1"
+    libraryDependencies ++= Libraries.embeddedKafka
   )
 
 lazy val `kafka-admin` = (project in file("modules/kafka-admin"))
   .settings(
     name := "kafka-admin",
-    libraryDependencies += "org.apache.kafka" % "kafka-clients" % "2.8.1",
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.10",
-    libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4",
-    libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test,
-    libraryDependencies += "io.github.embeddedkafka" %% "embedded-kafka" % "2.8.1" % Test
+    libraryDependencies ++=
+      Libraries.kafkaClients ++
+        Libraries.logback ++
+        Libraries.scalaLogging ++
+        Libraries.scalactic ++
+        Libraries.scalatest.map(_ % Test) ++
+        Libraries.embeddedKafka.map(_ % Test)
   )
 
 lazy val `kafka-kv-client` = (project in file("modules/kafka-kv-client"))
   .settings(
     name := "kafka-kv-client",
-    libraryDependencies += "org.apache.kafka" % "kafka-clients" % "2.8.1",
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.10",
-    libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4",
-    libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test,
-    libraryDependencies += "io.github.embeddedkafka" %% "embedded-kafka" % "2.8.1" % Test
+    libraryDependencies ++=
+      Libraries.kafkaClients ++
+        Libraries.logback ++
+        Libraries.scalaLogging ++
+        Libraries.scalactic ++
+        Libraries.scalatest.map(_ % Test) ++
+        Libraries.embeddedKafka.map(_ % Test)
   )
 
 
 lazy val `kafka-kv-server` = (project in file("modules/kafka-kv-server"))
   .settings(
     name := "kafka-kv-server",
-    libraryDependencies += "org.apache.kafka" % "kafka-clients" % "2.8.1",
-    libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.10",
-    libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.4",
-    libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.11",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.11" % Test,
-    libraryDependencies += "io.github.embeddedkafka" %% "embedded-kafka" % "2.8.1" % Test
+    libraryDependencies ++=
+      Libraries.kafkaClients ++
+        Libraries.logback ++
+        Libraries.scalaLogging ++
+        Libraries.scalactic ++
+        Libraries.scalatest.map(_ % Test) ++
+        Libraries.embeddedKafka.map(_ % Test)
   )
 
 
 lazy val root = (project in file("."))
-  .settings(
-    name := "kafka-kv"
-  )
+  .settings(name := "kafka-kv")
