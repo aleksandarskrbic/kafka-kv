@@ -11,7 +11,7 @@ import org.apache.kafka.clients.admin.{ AdminClient, AdminClientConfig }
 import kafka.kv.admin.model._
 import kafka.kv.common.FutureOps._
 
-class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
+final class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
   def createCompactedTopic(name: String): Future[Unit] = {
     val compactedTopic = CreateTopic(name).compacted
     val result = admin.createTopics(Java.singletonList(compactedTopic))

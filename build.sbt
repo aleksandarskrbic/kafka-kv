@@ -7,18 +7,6 @@ ThisBuild / scalaVersion := "2.13.8"
 lazy val `embedded-kafka` = (project in file("modules/embedded-kafka"))
   .settings(name := "embedded-kafka", libraryDependencies ++= Libraries.embeddedKafka)
 
-lazy val kafkaKvProtocol = (project in file("modules/kafka-kv-protocol")).settings(
-  name := "kafka-kv-protocol",
-  libraryDependencies ++=
-    Libraries.circe ++
-    Libraries.scalactic ++
-    Libraries.scalatest.map(_ % Test))
-
-lazy val kafkaKvCommon = (project in file("modules/kafka-kv-common")).settings(
-  name := "kafka-kv-common",
-  libraryDependencies ++=
-    Libraries.kafkaClients)
-
 lazy val kafkaAdmin = (project in file("modules/kafka-admin"))
   .settings(
     name := "kafka-admin",
@@ -31,28 +19,15 @@ lazy val kafkaAdmin = (project in file("modules/kafka-admin"))
       Libraries.embeddedKafka.map(_ % Test))
   .dependsOn(kafkaKvCommon)
 
-lazy val kafkaKvClientHttp = (project in file("modules/kafka-kv-client-http")).settings(
-  name := "kafka-kv-client-http",
-  libraryDependencies ++=
-    Libraries.kafkaClients ++
-    Libraries.logback ++
-    Libraries.scalaLogging ++
-    Libraries.akkaActors ++
-    Libraries.tapirCirce ++
-    Libraries.tapirAkkaHttp ++
-    Libraries.scalactic ++
-    Libraries.scalatest.map(_ % Test) ++
-    Libraries.embeddedKafka.map(_ % Test))
+lazy val kafkaKvCommon = (project in file("modules/kafka-kv-common"))
+  .settings(name := "kafka-kv-common", libraryDependencies ++= Libraries.kafkaClients)
 
-lazy val kafkaKvClientSdk = (project in file("modules/kafka-kv-client-sdk")).settings(
-  name := "kafka-kv-client-sdk",
+lazy val kafkaKvProtocol = (project in file("modules/kafka-kv-protocol")).settings(
+  name := "kafka-kv-protocol",
   libraryDependencies ++=
-    Libraries.kafkaClients ++
-    Libraries.logback ++
-    Libraries.scalaLogging ++
+    Libraries.circe ++
     Libraries.scalactic ++
-    Libraries.scalatest.map(_ % Test) ++
-    Libraries.embeddedKafka.map(_ % Test))
+    Libraries.scalatest.map(_ % Test))
 
 lazy val kafkaKvServer = (project in file("modules/kafka-kv-server"))
   .settings(
