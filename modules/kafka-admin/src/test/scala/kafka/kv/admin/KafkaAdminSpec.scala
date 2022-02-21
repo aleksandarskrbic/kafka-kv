@@ -10,7 +10,7 @@ class KafkaAdminSpec extends KafkaSpec {
     for {
       _ <- kafkaAdmin.createCompactedTopic(testTopic)
       topics <- kafkaAdmin.listTopics().map(_.map(_.name))
-    } yield  {
+    } yield {
       topics should contain(testTopic)
     }
   }
@@ -33,7 +33,7 @@ class KafkaAdminSpec extends KafkaSpec {
     for {
       clusterDetails <- kafkaAdmin.describeCluster()
     } yield {
-      clusterDetails.nodes.size should be (1)
+      clusterDetails.nodes.size should be(1)
     }
   }
 }

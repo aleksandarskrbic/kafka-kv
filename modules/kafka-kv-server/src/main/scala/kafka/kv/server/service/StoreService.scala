@@ -1,7 +1,6 @@
-package kafka.kv.server
+package kafka.kv.server.service
 
 import kafka.kv.admin.KafkaAdmin
-import kafka.kv.server.http.request.CreateStore
 
 import scala.concurrent.{ExecutionContext, Future}
 

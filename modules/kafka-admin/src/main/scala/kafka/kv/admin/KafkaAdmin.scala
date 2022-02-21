@@ -1,15 +1,15 @@
 package kafka.kv.admin
 
 import java.util.Properties
-import java.util.{Collections => Java}
-import kafka.kv.admin.internal.Blocker
-import kafka.kv.admin.internal.FutureOps._
+import java.util.{ Collections => Java }
 
-import scala.concurrent.{ExecutionContext, Future}
-import kafka.kv.admin.model.{ClusterDetails, ConsumerGroupsDetails, CreateTopic, TopicDetails}
-import org.apache.kafka.clients.admin.{AdminClient, AdminClientConfig}
-
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.jdk.CollectionConverters._
+
+import org.apache.kafka.clients.admin.{ AdminClient, AdminClientConfig }
+
+import kafka.kv.admin.model._
+import kafka.kv.common.FutureOps._
 
 class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
   def createCompactedTopic(name: String): Future[Unit] = {
@@ -55,10 +55,10 @@ class KafkaAdmin(admin: AdminClient)(implicit ec: ExecutionContext) {
 }
 
 object KafkaAdmin {
-  def make(servers: String): KafkaAdmin = {
-    val config = new Properties()
-    config.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, servers)
+  def make(servers: String)(implicit ec: ExecutionContext): KafkaAdmin = {
+    val props = new Properties()
+    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, servers)
 
-    new KafkaAdmin(AdminClient.create(config))(Blocker.default())
+    new KafkaAdmin(AdminClient.create(props))
   }
 }

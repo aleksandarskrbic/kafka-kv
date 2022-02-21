@@ -1,7 +1,7 @@
-package kafka.kv.admin.internal
+package kafka.kv.common
 
 import org.apache.kafka.common.KafkaFuture
-import scala.concurrent.{ExecutionContext, Future, Promise}
+import scala.concurrent.{ ExecutionContext, Future, Promise }
 
 object FutureOps {
   implicit class KafkaFutureOps[T](kafkaFuture: KafkaFuture[T]) {
