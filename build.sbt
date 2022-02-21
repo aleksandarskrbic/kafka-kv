@@ -11,6 +11,15 @@ lazy val `embedded-kafka` = (project in file("modules/embedded-kafka"))
     libraryDependencies ++= Libraries.embeddedKafka
   )
 
+lazy val kafkaKvProtocol = (project in file("modules/kafka-kv-protocol"))
+  .settings(
+    name := "kafka-kv-protocol",
+    libraryDependencies ++=
+      Libraries.circe ++
+        Libraries.scalactic ++
+        Libraries.scalatest.map(_ % Test)
+  )
+
 lazy val kafkaAdmin = (project in file("modules/kafka-admin"))
   .settings(
     name := "kafka-admin",

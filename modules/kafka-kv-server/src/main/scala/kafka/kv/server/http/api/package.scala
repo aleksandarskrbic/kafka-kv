@@ -1,14 +1,21 @@
 package kafka.kv.server.http
 
-import kafka.kv.server.http.response.{FailureInfo, GenericResponse, SuccessInfo}
 import sttp.model.StatusCode
+import kafka.kv.server.http.response.{FailureInfo, SuccessInfo}
+
+import scala.concurrent.Future
 
 package object api {
   implicit class SuccessResponse(inner: (StatusCode, SuccessInfo)) {
-    def lift = Right(inner)
+    def right = Right(inner)
   }
 
   implicit class FailureResponse(inner: (StatusCode, FailureInfo)) {
-    def lift = Left(inner)
+    def left = Left(inner)
+  }
+
+  implicit class ResponseTransformer[T](future: Future[T]) {
+    def ok(message: String) =
+      SuccessInfo.ok(message)
   }
 }
